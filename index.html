@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Rain Atmosphere</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(#111827, #1f2937);
+}
+
+
+/* Rain container */
+.hsb-atmosphere {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+
+/* Rain drops */
+.atmo-rain b {
+    position: absolute;
+    top: -20px;
+    width: 2px;
+    height: 45px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    animation: rainFall linear infinite;
+}
+
+
+/* Falling animation */
+@keyframes rainFall {
+
+    from {
+        transform: translateY(-100px);
+    }
+
+    to {
+        transform: translateY(110vh);
+    }
+
+}
+
+
+/* Example lightning effect */
+body:after {
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,0);
+    animation: lightning 8s infinite;
+    pointer-events:none;
+}
+
+
+@keyframes lightning {
+
+    0%,95%,100%{
+        background:transparent;
+    }
+
+    96%{
+        background:rgba(255,255,255,0.15);
+    }
+
+    97%{
+        background:transparent;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="hsb-atmosphere atmo-rain" data-atmosphere="rain" data-intensity="65">
+
+</div>
+
+
+
+<script>
+
+// Create rain drops automatically
+
+const rain = document.querySelector(".atmo-rain");
+
+const drops = 120;
+
+
+for(let i=0;i<drops;i++){
+
+    let drop=document.createElement("b");
+
+    drop.style.left=Math.random()*100+"%";
+
+    let duration=(0.5+Math.random()*0.8).toFixed(2);
+
+    drop.style.animationDuration=duration+"s";
+
+    drop.style.animationDelay=(-Math.random()*6)+"s";
+
+    drop.style.opacity=(0.2+Math.random()*0.5).toFixed(2);
+
+    drop.style.height=(20+Math.random()*50)+"px";
+
+    rain.appendChild(drop);
+
+}
+
+
+</script>
+
+
+</body>
+</html>
