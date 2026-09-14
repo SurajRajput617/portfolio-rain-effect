@@ -649,6 +649,42 @@ button,
     }
 }
 
+
+/* Mobile swipe fix */
+html,
+body,
+.portfolio {
+    overscroll-behavior: none;
+}
+
+@media (max-width: 768px) {
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden !important;
+        overscroll-behavior: none;
+    }
+
+    .portfolio,
+    .scene {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden !important;
+    }
+
+    .scene {
+        touch-action: none !important;
+    }
+
+    .header,
+    .bottom-controls,
+    .scene-navigation {
+        touch-action: manipulation;
+    }
+}
+
 </style>
 </head>
 
@@ -1171,73 +1207,92 @@ document.addEventListener("keydown", function(e) {
 
 
 
+
 /* ==============================
-   WHEEL + TOUCH / SWIPE
+   DESKTOP WHEEL + MOBILE SWIPE
 ================================ */
 
-let wheelAccumulator = 0;
-let wheelResetTimer = null;
+let wheelTotal = 0;
+let wheelTimer = null;
 
 document.addEventListener("wheel", function(e) {
-    // Prevent the browser/page from fighting with scene navigation.
     e.preventDefault();
-
     if (navigationLocked) return;
 
-    wheelAccumulator += e.deltaY;
+    wheelTotal += e.deltaY;
 
-    clearTimeout(wheelResetTimer);
-    wheelResetTimer = setTimeout(function() {
-        wheelAccumulator = 0;
-    }, 140);
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(function() {
+        wheelTotal = 0;
+    }, 160);
 
-    // Threshold prevents trackpad micro-movements from skipping several scenes.
-    if (Math.abs(wheelAccumulator) >= 35) {
-        navigateScene(wheelAccumulator > 0 ? 1 : -1);
-        wheelAccumulator = 0;
+    if (Math.abs(wheelTotal) >= 40) {
+        navigateScene(wheelTotal > 0 ? 1 : -1);
+        wheelTotal = 0;
     }
 }, { passive: false });
 
 
-let touchStartY = 0;
-let touchStartX = 0;
+/* MOBILE ONE-FINGER SWIPE UP / DOWN */
+let fingerStartY = null;
+let fingerStartX = null;
+let fingerCurrentY = null;
+let fingerCurrentX = null;
+let fingerTracking = false;
 
 document.addEventListener("touchstart", function(e) {
-    if (!e.touches.length) return;
-    touchStartY = e.touches[0].clientY;
-    touchStartX = e.touches[0].clientX;
+    if (e.touches.length !== 1) return;
+
+    fingerTracking = true;
+    fingerStartY = e.touches[0].clientY;
+    fingerStartX = e.touches[0].clientX;
+    fingerCurrentY = fingerStartY;
+    fingerCurrentX = fingerStartX;
 }, { passive: true });
 
 document.addEventListener("touchmove", function(e) {
-    // This portfolio is scene-based, so stop native page scrolling.
-    if (Math.abs(e.touches[0].clientY - touchStartY) >
-        Math.abs(e.touches[0].clientX - touchStartX)) {
+    if (!fingerTracking || e.touches.length !== 1) return;
+
+    fingerCurrentY = e.touches[0].clientY;
+    fingerCurrentX = e.touches[0].clientX;
+
+    const moveY = fingerCurrentY - fingerStartY;
+    const moveX = fingerCurrentX - fingerStartX;
+
+    // If the gesture is mainly vertical, stop browser scrolling/rubber-banding.
+    if (Math.abs(moveY) > Math.abs(moveX)) {
         e.preventDefault();
     }
 }, { passive: false });
 
 document.addEventListener("touchend", function(e) {
-    if (!e.changedTouches.length || navigationLocked) return;
+    if (!fingerTracking) return;
+    fingerTracking = false;
 
-    const deltaY = touchStartY - e.changedTouches[0].clientY;
-    const deltaX = touchStartX - e.changedTouches[0].clientX;
+    if (navigationLocked) return;
 
-    if (Math.abs(deltaY) >= 45 && Math.abs(deltaY) > Math.abs(deltaX)) {
-        navigateScene(deltaY > 0 ? 1 : -1);
+    if (e.changedTouches && e.changedTouches.length) {
+        fingerCurrentY = e.changedTouches[0].clientY;
+        fingerCurrentX = e.changedTouches[0].clientX;
+    }
+
+    const distanceY = fingerCurrentY - fingerStartY;
+    const distanceX = fingerCurrentX - fingerStartX;
+
+    // Only trigger a scene change for a clear vertical swipe.
+    if (Math.abs(distanceY) >= 35 && Math.abs(distanceY) > Math.abs(distanceX) * 1.1) {
+        if (distanceY < 0) {
+            // Finger moves UP -> next scene
+            navigateScene(1);
+        } else {
+            // Finger moves DOWN -> previous scene
+            navigateScene(-1);
+        }
     }
 }, { passive: true });
 
-
-/* Optional horizontal swipe also works */
-document.addEventListener("touchend", function(e) {
-    if (!e.changedTouches.length || navigationLocked) return;
-
-    const deltaX = touchStartX - e.changedTouches[0].clientX;
-    const deltaY = touchStartY - e.changedTouches[0].clientY;
-
-    if (Math.abs(deltaX) >= 65 && Math.abs(deltaX) > Math.abs(deltaY)) {
-        navigateScene(deltaX > 0 ? 1 : -1);
-    }
+document.addEventListener("touchcancel", function() {
+    fingerTracking = false;
 }, { passive: true });
 
 
