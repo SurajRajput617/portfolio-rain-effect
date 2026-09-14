@@ -685,6 +685,393 @@ body,
     }
 }
 
+
+/* =========================================================
+   RESPONSIVE LAYOUT FIX
+   Keeps all scenes consistent and prevents mobile overlap.
+========================================================= */
+
+.scene {
+    padding-top: 110px;
+    padding-bottom: 105px;
+}
+
+.scene-content {
+    max-width: 900px;
+}
+
+.scene p {
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* Qualifications has more content, so keep its text compact on desktop too */
+.scene p strong {
+    line-height: 1.35;
+}
+
+@media (max-width: 1024px) {
+    .scene {
+        padding: 95px 9% 95px;
+    }
+
+    .scene-content {
+        max-width: 760px;
+    }
+
+    .scene h1,
+    .final-scene h1 {
+        font-size: clamp(42px, 7.5vw, 76px);
+        line-height: 1;
+        margin-bottom: 22px;
+    }
+
+    .scene p {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+}
+
+@media (max-width: 768px) {
+    html,
+    body,
+    .portfolio {
+        height: 100%;
+        min-height: 100dvh;
+    }
+
+    .header {
+        padding: 16px 18px;
+    }
+
+    .scene {
+        /* reserve space for header + bottom controls */
+        padding: 72px 52px 92px 20px !important;
+        align-items: flex-start !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .scene::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scene-content {
+        width: 100%;
+        max-width: 100% !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 12px 0 20px !important;
+    }
+
+    .scene-number {
+        margin-bottom: 14px;
+        font-size: 10px;
+        letter-spacing: 2px;
+    }
+
+    .scene h1,
+    .final-scene h1 {
+        font-size: clamp(34px, 11vw, 54px) !important;
+        line-height: 1.02 !important;
+        letter-spacing: -1.5px !important;
+        margin-bottom: 18px !important;
+        overflow-wrap: normal !important;
+        word-break: normal !important;
+    }
+
+    .scene p {
+        max-width: 100% !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        padding-bottom: 8px;
+    }
+
+    .final-scene {
+        align-items: center !important;
+        overflow: hidden !important;
+    }
+
+    .final-scene .scene-content {
+        margin: auto 0 !important;
+        padding-bottom: 80px !important;
+    }
+
+    .scene-navigation {
+        right: 10px;
+        gap: 9px;
+    }
+
+    .nav-dot {
+        width: 7px;
+        height: 7px;
+    }
+
+    .bottom-controls {
+        left: 16px;
+        right: 16px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        padding-top: 8px;
+    }
+
+    .progress-line {
+        width: 55px;
+    }
+
+    .control-btn {
+        width: 42px;
+        height: 42px;
+    }
+}
+
+@media (max-width: 420px) {
+    .scene {
+        padding: 68px 40px 88px 16px !important;
+    }
+
+    .scene h1,
+    .final-scene h1 {
+        font-size: clamp(31px, 10.5vw, 45px) !important;
+    }
+
+    .scene p {
+        font-size: 13.5px !important;
+        line-height: 1.45 !important;
+    }
+
+    .scene-navigation {
+        right: 7px;
+    }
+
+    .bottom-controls {
+        left: 12px;
+        right: 12px;
+    }
+
+    .progress-wrapper {
+        gap: 7px;
+    }
+
+    .progress-line {
+        width: 42px;
+    }
+
+    .control-btn {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Short phones / landscape phones */
+@media (max-width: 768px) and (max-height: 700px) {
+    .scene {
+        padding-top: 62px !important;
+        padding-bottom: 82px !important;
+    }
+
+    .scene h1,
+    .final-scene h1 {
+        font-size: clamp(30px, 9vw, 44px) !important;
+        margin-bottom: 12px !important;
+    }
+
+    .scene-number {
+        margin-bottom: 10px;
+    }
+
+    .scene p {
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+    }
+}
+
+
+/* =========================================================
+   QUALIFICATIONS — TRUE TWO COLUMN LAYOUT
+========================================================= */
+.qualifications-scene .scene-content {
+    width: min(1100px, 100%);
+    max-width: 1100px;
+}
+
+.qualifications-scene h1 {
+    margin-bottom: 34px;
+}
+
+.qualification-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(35px, 6vw, 90px);
+    width: 100%;
+    align-items: start;
+}
+
+.qualification-column {
+    min-width: 0;
+}
+
+.qualification-column h3 {
+    margin: 0 0 28px;
+    font-size: clamp(17px, 1.4vw, 21px);
+    line-height: 1.3;
+    color: rgba(255,255,255,.82);
+}
+
+.qualification-column-right {
+    padding-top: 57px;
+}
+
+.qualification-item {
+    margin-bottom: 34px;
+    color: rgba(255,255,255,.68);
+    font-size: clamp(14px, 1.15vw, 17px);
+    line-height: 1.55;
+}
+
+.qualification-item strong,
+.qualification-item span {
+    display: block;
+}
+
+.qualification-item strong {
+    margin-bottom: 6px;
+    color: rgba(255,255,255,.72);
+    font-weight: 600;
+}
+
+.qualification-item span + span {
+    margin-top: 3px;
+}
+
+/* Tablet: still two columns where there is enough width */
+@media (max-width: 900px) and (min-width: 769px) {
+    .qualification-grid {
+        gap: 32px;
+    }
+
+    .qualification-column-right {
+        padding-top: 52px;
+    }
+
+    .qualification-item {
+        font-size: 14px;
+    }
+}
+
+/* Mobile: columns stack cleanly, no overlap/cut text */
+@media (max-width: 768px) {
+    .qualifications-scene {
+        overflow-y: auto !important;
+    }
+
+    .qualifications-scene .scene-content {
+        width: 100%;
+        max-width: 100% !important;
+    }
+
+    .qualifications-scene h1 {
+        margin-bottom: 24px !important;
+    }
+
+    .qualification-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .qualification-column h3 {
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+
+    .qualification-column-right {
+        padding-top: 0;
+    }
+
+    .qualification-item {
+        margin-bottom: 24px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+}
+
+@media (max-width: 420px) {
+    .qualification-item {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+}
+
+
+/* Balanced Qualifications content */
+.qualifications-scene .qualification-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(45px, 7vw, 110px);
+}
+
+.qualifications-scene .qualification-column-right {
+    padding-top: 47px;
+}
+
+@media (max-width: 768px) {
+    .qualifications-scene .qualification-grid {
+        grid-template-columns: 1fr;
+        column-gap: 0;
+    }
+
+    .qualifications-scene .qualification-column-right {
+        padding-top: 0;
+    }
+}
+
+
+/* Reduce vertical gaps in Qualifications */
+.qualifications-scene h1 {
+    margin-bottom: 22px !important;
+}
+
+.qualification-column h3 {
+    margin-bottom: 16px !important;
+}
+
+.qualification-item {
+    margin-bottom: 18px !important;
+    line-height: 1.4 !important;
+}
+
+.qualification-item strong {
+    margin-bottom: 3px !important;
+}
+
+.qualification-item span + span {
+    margin-top: 1px !important;
+}
+
+.qualifications-scene .qualification-column-right {
+    padding-top: 36px !important;
+}
+
+@media (max-width: 768px) {
+    .qualifications-scene h1 {
+        margin-bottom: 16px !important;
+    }
+
+    .qualification-column h3 {
+        margin-bottom: 12px !important;
+    }
+
+    .qualification-item {
+        margin-bottom: 14px !important;
+        line-height: 1.4 !important;
+    }
+
+    .qualifications-scene .qualification-column-right {
+        padding-top: 0 !important;
+    }
+}
+
 </style>
 </head>
 
@@ -721,7 +1108,36 @@ body,
          SCENE 01
     ========================== -->
 
-    <section class="scene active">
+    
+
+    <!-- START / END SCREEN FIRST -->
+<section class="scene final-scene active">
+
+        <div class="scene-content">
+
+            <div class="scene-number" style="justify-content:center;">
+                MY STORY
+            </div>
+
+            <h1>
+                SURAJ<span>.</span>
+            </h1>
+
+            <p class="final-message">
+                “Welcome to my journey — a story of learning,
+                creativity, achievements, and endless possibilities.”
+            </p>
+
+            <div class="signature">
+                Dream • Learn • Create • Inspire
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- SCENE 01 -->
+<section class="scene">
 
         <div class="scene-content">
 
@@ -745,13 +1161,8 @@ body,
 
     </section>
 
-
-
-    <!-- =========================
-         SCENE 02
-    ========================== -->
-
-    <section class="scene">
+    <!-- SCENE 02 -->
+<section class="scene">
 
         <div class="scene-content">
 
@@ -775,13 +1186,8 @@ body,
 
     </section>
 
-
-
-    <!-- =========================
-         SCENE 03
-    ========================== -->
-
-    <section class="scene">
+    <!-- SCENE 03 -->
+<section class="scene">
 
         <div class="scene-content">
 
@@ -805,43 +1211,69 @@ body,
 
     </section>
 
+    <!-- SCENE 04 -->
 
+<section class="scene qualifications-scene">
+    <div class="scene-content">
 
-    <!-- =========================
-         SCENE 04
-    ========================== -->
-
-    <section class="scene">
-
-        <div class="scene-content">
-
-            <div class="scene-number">
-                SCENE 04 / 08
-            </div>
-
-            <h1>
-                QUALI<span>FICATIONS</span>
-            </h1>
-
-            <p>
-                <strong>Professional Internships</strong><br><br>• Excellence Technology, Hamirpur (Web Developer)<br>Jul 2023 – Aug 2023 (45 Days)<br>Project: Computer Centre Website<br><br>• C-DAC Mohali (Advanced Web Development)<br>Oct 2023 – Jan 2024<br>Project: Fashion Hub E-Commerce Website<br><br>• Pisoft Informatics Pvt. Ltd., Mohali<br>Jul 2024 – Oct 2024<br>Project: Electronics Store E-Commerce Website
-            </p>
-
-            <div class="decorative-text">
-                Building Excellence
-            </div>
-
+        <div class="scene-number">
+            SCENE 04 / 08
         </div>
 
-    </section>
+        <h1>
+            INTERN<span>SHIPS</span>
+        </h1>
 
+        
+<div class="qualification-grid">
 
+    <div class="qualification-column">
+        <h3>Professional Internships</h3>
 
-    <!-- =========================
-         SCENE 05
-    ========================== -->
+        <div class="qualification-item">
+            <strong>• Excellence Technology, Hamirpur (Web Developer)</strong>
+            <span>Jul 2023 – Aug 2023 (45 Days)</span>
+            <span>Project: Computer Centre Website</span>
+        </div>
+         <div class="qualification-item">
+            <strong>• C-DAC Mohali (Advanced Web Development)</strong>
+            <span>Oct 2023 – Jan 2024</span>
+            <span>Project: Fashion Hub E-Commerce Website</span>
+        </div>
+         <div class="qualification-item">
+            <strong>• Pisoft Informatics Pvt. Ltd., Mohali</strong>
+            <span>Jul 2024 – Oct 2024</span>
+            <span>Project: Electronics Store E-Commerce Website</span>
+        </div>
+    </div>
 
-    <section class="scene">
+    <div class="qualification-column qualification-column-right">
+       
+   <div class="qualification-item">
+    <strong>• Stand In Crowd Technologies Private Limited</strong>
+    <span>Shopify & WordPress Intern | Aug 2025 – Dec 2025</span>
+    <span><strong>Projects:</strong> Shopify Stores & WordPress E-Commerce Websites</span>
+
+    <span>• Developed and customized responsive Shopify and WordPress e-commerce websites.</span>
+    <span>• Worked on Shopify store setup, theme customization, product pages, collections, and website layouts.</span>
+    <span>• Built and customized WordPress websites using themes, plugins, and page builders.</span>
+    <span>• Created responsive and user-friendly web pages for desktop, tablet, and mobile devices.</span>
+    <span>• Assisted with e-commerce functionality, website updates, content management, and troubleshooting.</span>
+    <span>• Worked with HTML, CSS, JavaScript, Shopify, WordPress, and basic UI/UX design principles.</span>
+</div>
+    </div>
+
+</div>
+
+<div class="decorative-text">
+    Building Excellence
+</div>
+
+    </div>
+</section>
+
+    <!-- SCENE 05 -->
+<section class="scene">
 
         <div class="scene-content">
 
@@ -854,7 +1286,7 @@ body,
             </h1>
 
             <p>
-                I enjoy creating modern and responsive websites using HTML, CSS, Bootstrap, JavaScript, WordPress, MySQL, Front-End Technologies, and Responsive Web Design. Every project helps me improve my creativity, coding, and problem-solving skills.
+                I enjoy creating modern and responsive websites using HTML, CSS, Bootstrap, JavaScript, Canva, Figma, GitHub, WordPress, Shopify, MySQL, Front-End Technologies, and Responsive Web Design. Every project helps me improve my creativity, coding, and problem-solving skills.
             </p>
 
             <div class="decorative-text">
@@ -865,13 +1297,8 @@ body,
 
     </section>
 
-
-
-    <!-- =========================
-         SCENE 06
-    ========================== -->
-
-    <section class="scene">
+    <!-- SCENE 06 -->
+<section class="scene">
 
         <div class="scene-content">
 
@@ -895,13 +1322,8 @@ body,
 
     </section>
 
-
-
-    <!-- =========================
-         SCENE 07
-    ========================== -->
-
-    <section class="scene">
+    <!-- SCENE 07 -->
+<section class="scene">
 
         <div class="scene-content">
 
@@ -914,7 +1336,9 @@ body,
             </h1>
 
             <p>
-                Through internships at Excellence Technology, C-DAC Mohali, and Pisoft Informatics Pvt. Ltd., I gained practical experience in developing responsive websites, e-commerce applications, and modern user interfaces using HTML, CSS, Bootstrap, JavaScript, MySQL, and WordPress.
+               Through internships at Excellence Technology, C-DAC Mohali, and Pisoft Informatics Pvt. Ltd., I gained hands-on experience in developing responsive websites, e-commerce applications, and modern user interfaces. I worked with technologies and tools including HTML, CSS, Bootstrap, JavaScript, MySQL, Shopify, WordPress, GitHub, Figma, and Canva.
+               In addition, I have **1 year of professional experience as a Web Developer at Stand In Crowd Technologies Pvt. Ltd.**, where I worked on real-world web development projects, website customization, responsive design, and the development and maintenance of user-friendly websites.
+
             </p>
 
             <div class="decorative-text">
@@ -925,13 +1349,8 @@ body,
 
     </section>
 
-
-
-    <!-- =========================
-         SCENE 08
-    ========================== -->
-
-    <section class="scene">
+    <!-- SCENE 08 -->
+<section class="scene">
 
         <div class="scene-content">
 
@@ -957,41 +1376,9 @@ body,
 
 
 
-    <!-- =========================
-         FINAL SCREEN
-    ========================== -->
-
-    <section class="scene final-scene">
-
-        <div class="scene-content">
-
-            <div class="scene-number" style="justify-content:center;">
-                MY STORY
-            </div>
-
-            <h1>
-                SURAJ<span>.</span>
-            </h1>
-
-            <p class="final-message">
-                “Welcome to my journey — a story of learning,
-                creativity, achievements, and endless possibilities.”
-            </p>
-
-            <div class="signature">
-                Dream • Learn • Create • Inspire
-            </div>
-
-        </div>
-
-    </section>
-
-
-
     <!-- RIGHT DOT NAVIGATION -->
 
     <div class="scene-navigation">
-
         <span class="nav-dot active" data-scene="0"></span>
         <span class="nav-dot" data-scene="1"></span>
         <span class="nav-dot" data-scene="2"></span>
@@ -1001,7 +1388,6 @@ body,
         <span class="nav-dot" data-scene="6"></span>
         <span class="nav-dot" data-scene="7"></span>
         <span class="nav-dot" data-scene="8"></span>
-
     </div>
 
 
@@ -1106,6 +1492,12 @@ let navigationLocked = false;
 
 function showScene(index) {
 
+    // Order:
+    // 0 = MY STORY opening screen (unnumbered)
+    // 1 = Introduction (01)
+    // ...
+    // 8 = My Vision (08)
+
     if (index < 0) index = scenes.length - 1;
     if (index >= scenes.length) index = 0;
 
@@ -1124,14 +1516,16 @@ function showScene(index) {
 
     currentScene = index;
 
-    if (index === scenes.length - 1) {
-        currentSceneText.textContent = "END";
+    if (index === 0) {
+        // Opening MY STORY screen. Numbering itself starts from Introduction.
+        currentSceneText.textContent = "01";
+        progressFill.style.width = "0%";
     } else {
-        currentSceneText.textContent = String(index + 1).padStart(2, "0");
+        // Introduction = 01 ... My Vision = 08
+        currentSceneText.textContent = String(index).padStart(2, "0");
+        const progress = (index / 8) * 100;
+        progressFill.style.width = progress + "%";
     }
-
-    const progress = ((index + 1) / scenes.length) * 100;
-    progressFill.style.width = progress + "%";
 }
 
 
@@ -1259,10 +1653,10 @@ document.addEventListener("touchmove", function(e) {
     const moveY = fingerCurrentY - fingerStartY;
     const moveX = fingerCurrentX - fingerStartX;
 
-    // If the gesture is mainly vertical, stop browser scrolling/rubber-banding.
-    if (Math.abs(moveY) > Math.abs(moveX)) {
-        e.preventDefault();
-    }
+    // Allow vertical scrolling inside long mobile scenes.
+    // Horizontal/accidental gestures remain ignored.
+    const activeScene = document.querySelector(".scene.active");
+    if (!activeScene) return;
 }, { passive: false });
 
 document.addEventListener("touchend", function(e) {
@@ -1279,13 +1673,16 @@ document.addEventListener("touchend", function(e) {
     const distanceY = fingerCurrentY - fingerStartY;
     const distanceX = fingerCurrentX - fingerStartX;
 
-    // Only trigger a scene change for a clear vertical swipe.
-    if (Math.abs(distanceY) >= 35 && Math.abs(distanceY) > Math.abs(distanceX) * 1.1) {
-        if (distanceY < 0) {
-            // Finger moves UP -> next scene
+    // Change scenes only when the current scene is already at its scroll edge.
+    const activeScene = document.querySelector(".scene.active");
+    const atTop = !activeScene || activeScene.scrollTop <= 1;
+    const atBottom = !activeScene ||
+        activeScene.scrollTop + activeScene.clientHeight >= activeScene.scrollHeight - 2;
+
+    if (Math.abs(distanceY) >= 45 && Math.abs(distanceY) > Math.abs(distanceX) * 1.1) {
+        if (distanceY < 0 && atBottom) {
             navigateScene(1);
-        } else {
-            // Finger moves DOWN -> previous scene
+        } else if (distanceY > 0 && atTop) {
             navigateScene(-1);
         }
     }
@@ -1295,6 +1692,10 @@ document.addEventListener("touchcancel", function() {
     fingerTracking = false;
 }, { passive: true });
 
+
+
+// Start with MY STORY opening screen; numbered scenes run 01 to 08.
+showScene(0);
 
 </script>
 
