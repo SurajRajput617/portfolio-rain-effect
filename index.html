@@ -21,11 +21,18 @@
 html,
 body {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
+}
+
+html {
+    overflow-x: hidden;
 }
 
 body {
+    min-height: 100vh;
+    min-height: 100dvh;
     overflow: hidden;
+    overscroll-behavior: none;
     font-family: Arial, Helvetica, sans-serif;
     color: #ffffff;
     background:
@@ -123,6 +130,7 @@ body:after {
     position: relative;
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     z-index: 5;
 }
 
@@ -417,46 +425,228 @@ body:after {
 }
 
 
+
+/* ==============================
+   TOUCH / RESPONSIVE SAFETY
+================================ */
+button,
+.nav-dot {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.scene-content {
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .scene {
+        padding-left: 8%;
+        padding-right: 8%;
+    }
+
+    .scene h1 {
+        font-size: clamp(42px, 8vw, 82px);
+    }
+}
+
 /* ==============================
    MOBILE
 ================================ */
 
-@media(max-width: 768px) {
+@media (max-width: 768px) {
+
+    body {
+        overflow: hidden;
+    }
 
     .header {
-        padding: 25px;
+        padding: 18px 20px;
+    }
+
+    .logo {
+        font-size: 15px;
+        letter-spacing: 3px;
     }
 
     .story-label {
         display: none;
     }
 
-    .scene {
-        padding: 90px 35px 120px;
+    .portfolio {
+        height: 100vh;
+        height: 100dvh;
     }
 
-    .scene h1 {
+    .scene {
+        align-items: flex-start;
+        padding: 78px 48px 105px 22px;
+        overflow: hidden;
+        overscroll-behavior: none;
+        touch-action: none;
+    }
+
+    .scene::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scene-content {
+        max-width: 100%;
+        margin: auto 0;
+        padding: 12px 0;
+    }
+
+    .scene-number {
+        margin-bottom: 18px;
+        gap: 10px;
+        font-size: 10px;
+        letter-spacing: 2px;
+    }
+
+    .scene-number:before {
+        width: 28px;
+    }
+
+    .scene h1,
+    .final-scene h1 {
+        font-size: clamp(38px, 13vw, 66px);
+        line-height: 0.98;
         letter-spacing: -2px;
+        margin-bottom: 20px;
+        overflow-wrap: anywhere;
+    }
+
+    .scene p {
+        font-size: 15px;
+        line-height: 1.65;
+    }
+
+    .final-message {
+        font-size: 16px !important;
+    }
+
+    .signature {
+        margin-top: 24px;
+        font-size: 10px;
+        line-height: 1.8;
+        letter-spacing: 3px;
     }
 
     .scene-navigation {
-        right: 18px;
+        right: 12px;
+        gap: 11px;
+    }
+
+    .nav-dot {
+        width: 8px;
+        height: 8px;
     }
 
     .bottom-controls {
-        left: 25px;
-        right: 25px;
-        bottom: 25px;
+        left: 20px;
+        right: 20px;
+        bottom: max(16px, env(safe-area-inset-bottom));
+    }
+
+    .progress-wrapper {
+        gap: 10px;
     }
 
     .progress-line {
-        width: 80px;
+        width: 70px;
+    }
+
+    .control-btn {
+        width: 44px;
+        height: 44px;
     }
 
     .decorative-text {
         display: none;
     }
+}
 
+@media (max-width: 420px) {
+    .scene {
+        padding-left: 18px;
+        padding-right: 38px;
+    }
+
+    .scene h1,
+    .final-scene h1 {
+        font-size: clamp(34px, 12vw, 52px);
+    }
+
+    .progress-line {
+        width: 48px;
+    }
+
+    .controls {
+        gap: 7px;
+    }
+
+    .control-btn {
+        width: 42px;
+        height: 42px;
+    }
+}
+
+@media (max-height: 650px) and (max-width: 768px) {
+    .scene {
+        padding-top: 68px;
+        padding-bottom: 90px;
+    }
+
+    .scene-content {
+        margin: 0;
+    }
+
+    .scene h1,
+    .final-scene h1 {
+        font-size: clamp(32px, 10vw, 48px);
+        margin-bottom: 14px;
+    }
+
+    .scene-number {
+        margin-bottom: 12px;
+    }
+
+    .scene p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+}
+
+
+/* Scene navigation reliability */
+.scene {
+    overflow: hidden;
+}
+
+.scene.active {
+    pointer-events: auto;
+}
+
+.scene:not(.active) {
+    pointer-events: none;
+}
+
+.control-btn,
+.nav-dot {
+    position: relative;
+    z-index: 50;
+    touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+    .scene {
+        overflow: hidden !important;
+        touch-action: none;
+    }
+
+    .scene-content {
+        max-height: calc(100dvh - 175px);
+    }
 }
 
 </style>
@@ -874,29 +1064,21 @@ const prevBtn =
     document.getElementById("prevBtn");
 
 let currentScene = 0;
+let navigationLocked = false;
 
 
 
 function showScene(index) {
 
-    if (index < 0) {
-        index = scenes.length - 1;
-    }
-
-    if (index >= scenes.length) {
-        index = 0;
-    }
-
+    if (index < 0) index = scenes.length - 1;
+    if (index >= scenes.length) index = 0;
 
     scenes.forEach(scene => {
         scene.classList.remove("active");
+        scene.scrollTop = 0;
     });
 
-
-    dots.forEach(dot => {
-        dot.classList.remove("active");
-    });
-
+    dots.forEach(dot => dot.classList.remove("active"));
 
     scenes[index].classList.add("active");
 
@@ -904,50 +1086,40 @@ function showScene(index) {
         dots[index].classList.add("active");
     }
 
-
     currentScene = index;
 
-
-    /* Scene counter */
-
     if (index === scenes.length - 1) {
-
         currentSceneText.textContent = "END";
-
     } else {
-
-        currentSceneText.textContent =
-            String(index + 1).padStart(2, "0");
-
+        currentSceneText.textContent = String(index + 1).padStart(2, "0");
     }
 
-
-    /* Progress */
-
-    const progress =
-        ((index + 1) / scenes.length) * 100;
-
-    progressFill.style.width =
-        progress + "%";
+    const progress = ((index + 1) / scenes.length) * 100;
+    progressFill.style.width = progress + "%";
 }
 
 
 
+/* UNIFIED NAVIGATION */
+function navigateScene(direction) {
+    if (navigationLocked) return;
+
+    navigationLocked = true;
+    showScene(currentScene + direction);
+
+    setTimeout(function() {
+        navigationLocked = false;
+    }, 500);
+}
+
 /* NEXT */
-
 nextBtn.addEventListener("click", function() {
-
-    showScene(currentScene + 1);
-
+    navigateScene(1);
 });
 
-
 /* PREVIOUS */
-
 prevBtn.addEventListener("click", function() {
-
-    showScene(currentScene - 1);
-
+    navigateScene(-1);
 });
 
 
@@ -960,7 +1132,14 @@ dots.forEach(dot => {
         const index =
             parseInt(this.dataset.scene);
 
+        if (navigationLocked || index === currentScene) return;
+
+        navigationLocked = true;
         showScene(index);
+
+        setTimeout(function() {
+            navigationLocked = false;
+        }, 500);
 
     });
 
@@ -977,7 +1156,7 @@ document.addEventListener("keydown", function(e) {
         e.key === "ArrowRight" ||
         e.key === "ArrowDown"
     ) {
-        showScene(currentScene + 1);
+        navigateScene(1);
     }
 
 
@@ -985,43 +1164,82 @@ document.addEventListener("keydown", function(e) {
         e.key === "ArrowLeft" ||
         e.key === "ArrowUp"
     ) {
-        showScene(currentScene - 1);
+        navigateScene(-1);
     }
 
 });
+
 
 
 /* ==============================
-   MOUSE WHEEL
+   WHEEL + TOUCH / SWIPE
 ================================ */
 
-let wheelLocked = false;
+let wheelAccumulator = 0;
+let wheelResetTimer = null;
 
 document.addEventListener("wheel", function(e) {
+    // Prevent the browser/page from fighting with scene navigation.
+    e.preventDefault();
 
-    if (wheelLocked) return;
+    if (navigationLocked) return;
 
-    wheelLocked = true;
+    wheelAccumulator += e.deltaY;
 
+    clearTimeout(wheelResetTimer);
+    wheelResetTimer = setTimeout(function() {
+        wheelAccumulator = 0;
+    }, 140);
 
-    if (e.deltaY > 0) {
-
-        showScene(currentScene + 1);
-
-    } else {
-
-        showScene(currentScene - 1);
-
+    // Threshold prevents trackpad micro-movements from skipping several scenes.
+    if (Math.abs(wheelAccumulator) >= 35) {
+        navigateScene(wheelAccumulator > 0 ? 1 : -1);
+        wheelAccumulator = 0;
     }
+}, { passive: false });
 
 
-    setTimeout(function() {
+let touchStartY = 0;
+let touchStartX = 0;
 
-        wheelLocked = false;
+document.addEventListener("touchstart", function(e) {
+    if (!e.touches.length) return;
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+}, { passive: true });
 
-    }, 900);
+document.addEventListener("touchmove", function(e) {
+    // This portfolio is scene-based, so stop native page scrolling.
+    if (Math.abs(e.touches[0].clientY - touchStartY) >
+        Math.abs(e.touches[0].clientX - touchStartX)) {
+        e.preventDefault();
+    }
+}, { passive: false });
 
-});
+document.addEventListener("touchend", function(e) {
+    if (!e.changedTouches.length || navigationLocked) return;
+
+    const deltaY = touchStartY - e.changedTouches[0].clientY;
+    const deltaX = touchStartX - e.changedTouches[0].clientX;
+
+    if (Math.abs(deltaY) >= 45 && Math.abs(deltaY) > Math.abs(deltaX)) {
+        navigateScene(deltaY > 0 ? 1 : -1);
+    }
+}, { passive: true });
+
+
+/* Optional horizontal swipe also works */
+document.addEventListener("touchend", function(e) {
+    if (!e.changedTouches.length || navigationLocked) return;
+
+    const deltaX = touchStartX - e.changedTouches[0].clientX;
+    const deltaY = touchStartY - e.changedTouches[0].clientY;
+
+    if (Math.abs(deltaX) >= 65 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        navigateScene(deltaX > 0 ? 1 : -1);
+    }
+}, { passive: true });
+
 
 </script>
 
